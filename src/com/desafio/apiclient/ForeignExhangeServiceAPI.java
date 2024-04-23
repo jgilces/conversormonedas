@@ -23,17 +23,19 @@ public class ForeignExhangeServiceAPI {
         cliente = HttpClient.newHttpClient();
     }
 
-    public void enviarSolicitudConversion(String divisaOrigen, String divisaDestino, Double cantidadOrigen) throws URISyntaxException {
+    public void enviarSolicitudTasaCambio(String divisaOrigen, String divisaDestino) throws URISyntaxException, IOException, InterruptedException {
 
-        URI direccionAPI = new URI(DIRECCION_BASE_API + API_KEY + "/" + divisaOrigen + "/" + divisaDestino + "/" + cantidadOrigen);
+        URI direccionAPI = new URI(DIRECCION_BASE_API + API_KEY + "/pair/" + divisaOrigen + "/" + divisaDestino);
 
         solicitud = HttpRequest.newBuilder()
                 .uri(direccionAPI)
                 .GET()
                 .build();
+
+        this.respuesta = this.cliente.send(this.solicitud, HttpResponse.BodyHandlers.ofString());
     }
 
     public String obtenerRespuestaServicio() throws IOException, InterruptedException {
-        return this.cliente.send(this.solicitud, HttpResponse.BodyHandlers.ofString()).body();
+        return this.respuesta.body();
     }
 }
